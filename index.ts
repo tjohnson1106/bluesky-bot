@@ -14,26 +14,30 @@ const agent = new BskyAgent({
 //   );
 // }
 
-// insert getYearProgessEmoji function
-
-function getYearProgressEmoji() {
-  const currentDate = new Date();
-  const dayOfYear = Math.floor(
-    Number(currentDate) - Number(new Date(currentDate))
-  );
-  const percentageDone = dayOfYear / 365;
-
-  const greenCircles = Math.round(percentageDone * 10);
-  const greyCirlces = 10 - greenCircles;
-}
 await agent.login({
   identifier: process.env.BLUESKY_USERNAME!,
   password: process.env.BLUESKY_PASSWORD!,
 });
 
-const response = await agent.getProfile({ actor: "clearafter.bsky.social" });
+// insert getYearProgessEmoji function
+
+function getYearProgressEmoji() {
+  const currentDate = new Date();
+  const dayOfYear =
+    Math.floor(
+      Number(currentDate) - Number(new Date(currentDate.getFullYear(), 0, 1))
+    ) /
+    (1000 * 60 * 60 * 24);
+  const percentageDone = dayOfYear / 365;
+
+  const greenCircles = Math.round(percentageDone * 10);
+  const greyCirlces = 10 - greenCircles;
+  return "🟢".repeat(greenCircles) + "⚪️".repeat(greyCirlces);
+}
+
+const response = await agent.post({ text: getYearProgressEmoji() });
 console.log(response);
 
-//   return "".repeat(greenCircles) + "".repeat(greyCirlces);
+//   re/aturn "".repeat(greenCircles) + "".repeat(greyCirlces);
 // }
 // const response = await agent.getProfile({ "text": getYearProgressEmoji() });
